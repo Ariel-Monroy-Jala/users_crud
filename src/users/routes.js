@@ -4,7 +4,7 @@ import { cleanResponse } from "../middlewares/clean-response.js";
 
 export const router = new Router();
 
-router.get('/users/:id', userController.getUser);
+router.get('/users/:id', cleanResponse, userController.getUser);
 router.get('/users', cleanResponse, userController.getUsers);
 router.post('/users',userController.crateUser);
 router.put('/users/:id', userController.updateUser);
