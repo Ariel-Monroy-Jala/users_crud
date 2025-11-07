@@ -1,0 +1,171 @@
+type: collection.insomnia.rest/5.0
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1762281312221
+  modified: 1762281312221
+  description: ""
+collection:
+  - name: Users CRUD
+    meta:
+      id: fld_7b6d6f4d89a94e35ab84c5d26f6ecdbf
+      created: 1762522510644
+      modified: 1762522510644
+      sortKey: -1762522510644
+      description: ""
+    children:
+      - url: "{{ _.api_host }}/users"
+        name: Get users Paginated
+        meta:
+          id: req_cc2cfb4392874e0390bd61cb47c75f53
+          created: 1762281375541
+          modified: 1762522850847
+          isPrivate: false
+          description: ""
+          sortKey: -1762522523102
+        method: GET
+        parameters:
+          - id: pair_a231cd4ab30c4cd1851bc7993058e1ec
+            name: filter
+            value: Carlos
+            description: ""
+            disabled: false
+          - id: pair_4c57c4a51fcd473985351937bf92983f
+            name: page
+            value: "1"
+            description: ""
+            disabled: false
+          - id: pair_bf5a15d6c32d4e4ca64b4fff6db4bd0a
+            name: size
+            value: "10"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.api_host }}/users"
+        name: Create user
+        meta:
+          id: req_e10561ee624e48a188c5e030f8698ee7
+          created: 1762288947043
+          modified: 1762522819374
+          isPrivate: false
+          description: ""
+          sortKey: -1762522523302
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name":"Juan Carlos Bodoque",
+            	"username": "jcbodoque",
+            	"password": "superPassword"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.api_host }}/users/0d9b62cc-9daa-42e5-a61f-e6373fe561e0"
+        name: Get user
+        meta:
+          id: req_b471a52da4fd46edacfeb1a35cb49254
+          created: 1762353485429
+          modified: 1762522824996
+          isPrivate: false
+          description: ""
+          sortKey: -1762522523202
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.api_host }}/users/a20a56d0-2bf9-491a-86e9-3c5540fedaa7"
+        name: Update user
+        meta:
+          id: req_15bfe33b114c4b1e9f47021a150207bc
+          created: 1762461459430
+          modified: 1762522859215
+          isPrivate: false
+          description: ""
+          sortKey: -1762522523002
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Julio Roman"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.api_host }}/users/a20a56d0-2bf9-491a-86e9-3c5540fedaa7"
+        name: Delete user
+        meta:
+          id: req_23c4d4f7e0474af09eb7b9fafbf1c3f2
+          created: 1762461620535
+          modified: 1762522863429
+          isPrivate: false
+          description: ""
+          sortKey: -1762522522902
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.0.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1762281368025
+    modified: 1762281368025
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1762281368021
+    modified: 1762522802467
+    isPrivate: false
+  data:
+    api_host: http://localhost:3001
+    "": ""
