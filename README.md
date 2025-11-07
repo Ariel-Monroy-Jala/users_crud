@@ -1,11 +1,11 @@
 # User CRUD Koa-Sequelize
 
-In order to run this project you need to follow the next steps.
+To run this project, follow the steps below.
 
-## 1. Configure env variables
+## 1. Configure environment variables
 
-To start the data base and koa server some env variables are required.
-You should add them in a .env file in the root the project.
+To start the database and Koa server, some environment variables are required.
+You should add them to a `.env` file in the root of the project.
 
 | Name        | Description                       |
 |-------------|-----------------------------------|
@@ -18,17 +18,18 @@ You should add them in a .env file in the root the project.
 
 ## 2. Run docker compose
 
-To create the mysql instance we created a docker-compose file with the required configurations, you just need to run.
+To create the MySQL instance, we’ve included a `docker-compose.yml` file with the required configuration.
+Simply run the following command:
 
 ``` bash
   docker compose up -d
 ```
 
-This will create the database and user that is configured in .env file.
+This will create the database and user configured in your `.env` file.
 
 ## 3 Run koa server
 
-Finally, once the database is ready you can start the server running the following command.
+Once the database is ready, you can start the server with the following command:
 
 ```bash
   npm start
@@ -36,4 +37,4 @@ Finally, once the database is ready you can start the server running the followi
 
 ## 4 Try the endpoints
 
-To try the endpoints we also included a insonmia collection in the root of this folder with name `UsersCollection.yaml`.
+To test the endpoints, an Insomnia collection is included in the root folder named `UsersCollection.yaml`.
