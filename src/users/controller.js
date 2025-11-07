@@ -5,7 +5,6 @@ export const userController = {
   crateUser: async (ctx) => {
 
     const user = ctx.request.body;
-    console.log(user);
     await userService.createUser(user);
     ctx.body = { message: "User Created", success: true };
     ctx.status = 201;

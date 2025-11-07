@@ -10,9 +10,7 @@ export const userRepository = {
   },
 
   getUser: async (id) => {
-    console.log(id);
     const user = await UserModel.findOne({ where: { id } });
-    console.log(user);
     return user;
   },
 

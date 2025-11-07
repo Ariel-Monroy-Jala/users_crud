@@ -2,7 +2,6 @@ export const errorHandler = async (ctx,next) => {
   try {
     await next();
   } catch (error) {
-    console.log(error);
     ctx.status = error.statusCode || 500;
     ctx.body = { 
       success: false,
