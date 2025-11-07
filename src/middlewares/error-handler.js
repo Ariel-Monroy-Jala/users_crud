@@ -1,12 +1,12 @@
-export const errorHandler = async (ctx,next) => {
+export const errorHandler = async (ctx, next) => {
   try {
-    await next();
+    await next()
   } catch (error) {
-    ctx.status = error.statusCode || 500;
-    ctx.body = { 
+    ctx.status = error.statusCode || 500
+    ctx.body = {
       success: false,
       message: error.message || 'Internal Server Error'
-    };
-    ctx.app.emit('error',error,ctx);
+    }
+    ctx.app.emit('error', error, ctx)
   }
-} 
+}
