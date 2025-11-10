@@ -12,7 +12,7 @@ export const userService = {
   },
   updateUser: async (id, user) => {
     if (!id) throw new ApiException(400, 'Invalid request');
-    const dbUser = userRepository.getUser(id);
+    const dbUser = await userRepository.getUser(id);
     if (!dbUser) throw new ApiException(404, 'Not found');
     await userRepository.updateUser(id, user);
   },
@@ -37,7 +37,7 @@ export const userService = {
   },
   deleteUser: async (id) => {
     if (!id) throw new ApiException(400, 'Invalid request');
-    const dbUser = userRepository.getUser(id);
+    const dbUser = await userRepository.getUser(id);
     if (!dbUser) throw new ApiException(404, 'Not found');
     await userRepository.deleteUser(id);
   }
