@@ -8,7 +8,7 @@
     "start": "node --env-file=.env src/server.js",
     "test": "export $(grep -v '^#' .env | xargs) && npx mocha 'test/**/*.spec.js'",
     "test:unit": "npx mocha 'test/unit/*.spec.js'",
-    "test:e2e": "export $(grep -v '^#' .env.test | xargs) && npx mocha 'test/e2e/*.spec.js'",
+    "test:e2e": "export $(grep -v '^#' .env | xargs) && npx mocha 'test/e2e/*.spec.js'",
     "test:coverage": "c8 npm test",
     "coverage:report": "c8 report --reporter=html",
     "lint": "eslint .",
