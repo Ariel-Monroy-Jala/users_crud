@@ -44,7 +44,7 @@ describe('User service', () => {
       expect(createStub.calledOnceWithExactly(fakeUser));
     });
 
-    it('Should throw badrequest Error', async () => {
+    it('Should throw Invalid request error', async () => {
       createStub.resolves(fakeUser);
       await expect(userService.createUser({ ...fakeUser, name: null })).to.be.rejectedWith(ApiException, 'Invalid request');
     });

@@ -54,7 +54,7 @@ describe(('E2E: User API'), () => {
       expect(response.body.data.elements.length).to.be.equal(1);
     });
 
-    it('Should filter users with name diferente from Jhon doe"', async () => {
+    it('Should filter users with name diferent from Jhon doe"', async () => {
       const response = await server.get('/users').query({ filter: 'Not Jhon Doe' });
       // eslint-disable-next-line no-unused-expressions
       expect(Array.isArray(response.body.data.elements)).to.be.true;
