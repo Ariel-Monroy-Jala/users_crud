@@ -11,7 +11,6 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
   */
   crateUser: async (ctx) => {
-    /** @type {UserBodyDto} */
     const user = ctx.request.body;
     await userService.createUser(user);
     ctx.body = { message: 'User Created', success: true };
@@ -28,7 +27,6 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
   */
   updateUser: async (ctx) => {
-    /** @type {import('../types.js').CreateUserDto} */
     const user = ctx.request.body;
     const id = ctx.params.id;
     await userService.updateUser(id, user);
