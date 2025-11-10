@@ -1,10 +1,10 @@
-import { sequelize } from "../sequelize.js";
-import { DataTypes } from "sequelize";
+import { sequelize } from '../sequelize.js';
+import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
 
 export const UserModel = sequelize.define('users', {
   id: {
-    type: DataTypes.UUID, 
+    type: DataTypes.UUID,
     primaryKey: true,
     allowNull: false,
     defaultValue: DataTypes.UUIDV4
@@ -22,8 +22,7 @@ export const UserModel = sequelize.define('users', {
     allowNull: false,
     set (value) {
       const salt = bcrypt.genSaltSync(10);
-      this.setDataValue('password',bcrypt.hashSync(value,salt));
+      this.setDataValue('password', bcrypt.hashSync(value, salt));
     }
   }
-})
-
+});
