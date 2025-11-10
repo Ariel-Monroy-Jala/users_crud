@@ -4,9 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --env-file=.env src/app.js",
-    "start": "node --env-file=.env src/app.js",
-    "test": "npx mocha 'test/**/*.spec.js'",
+    "dev": "nodemon --env-file=.env src/server.js",
+    "start": "node --env-file=.env src/server.js",
+    "test": "export $(grep -v '^#' .env | xargs) && npx mocha 'test/**/*.spec.js'",
+    "test:unit": "npx mocha 'test/unit/*.spec.js'",
+    "test:e2e": "export $(grep -v '^#' .env.test | xargs) && npx mocha 'test/e2e/*.spec.js'",
     "test:coverage": "c8 npm test",
     "coverage:report": "c8 report --reporter=html",
     "lint": "eslint .",
@@ -39,6 +41,7 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.6.0",
     "mocha": "^11.7.5",
-    "sinon": "^21.0.0"
+    "sinon": "^21.0.0",
+    "supertest": "^7.1.4"
   }
 }
