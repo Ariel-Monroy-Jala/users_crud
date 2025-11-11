@@ -1,4 +1,4 @@
-import { UserModel } from '../db/models/user.js';
+import { UserModel } from '../infrastructure/db/models/user.js';
 import { Op } from 'sequelize';
 
 export const userRepository = {
@@ -8,7 +8,6 @@ export const userRepository = {
    *
    * This function:
    * - Performs create operation in the database.
-   *
    * @param {import('../types.js').CreateUserDto} user User data for database storage.
    * @returns {Promise<void>} Promise.
    */
@@ -21,7 +20,6 @@ export const userRepository = {
    *
    * This function:
    * - Performs update operation in the database.
-   *
    * @param {string} id UUID of the user to update.
    * @param {import('../types.js').UpdateUserDto} user New user data for database storage.
    * @returns {Promise<void>} Promise.
@@ -34,11 +32,9 @@ export const userRepository = {
    * Repository that manages retrieving a user by its id.
    *
    * This function:
-   *  - Obtains data in the format expected by the service.
-   *
+   * - Obtains data in the format expected by the service.
    * @param {string} id UUID of the user to update.
    * @returns {Promise<import('../types.js').User>} User data wrapped in a promise.
-   * @returns {Promise<null>} null value wrapped in a promise if user doesn't exists in database.
    */
   getUser: async (id) => {
     const user = await UserModel.findOne({ where: { id } });
@@ -49,8 +45,7 @@ export const userRepository = {
    * Repository that manages getting a list of users and count.
    *
    * This function:
-   *  - Obtains data in the format expected by the service.
-   *
+   * - Obtains data in the format expected by the service.
    * @param {number} page Number of the page to retrieve.
    * @param {number} size Number entries to retrieve in each page.
    * @param {string} filter String to filter database entries.
@@ -73,17 +68,28 @@ export const userRepository = {
    * Repository that manages deleting a user.
    *
    * This function:
-   *  - Performs delete operation in the database.
-   *
+   * - Performs delete operation in the database.
    * @param {string} id UUID of the user to delete.
    * @returns {Promise<void>} Promise.
    */
   deleteUser: async (id) => {
     await UserModel.destroy({ where: { id } });
+  },
+
+  /**
+   * Repository that manages creating a list of users.
+   *
+   * This function:
+   * - Performs bulk create operation in the database.
+   * @param {import('../types.js').User} users List of users to be created
+   */
+  bulkCreate: async (users) => {
+    await UserModel.bulkCreate(users);
   }
 };
 
-/** @typedef UserCount
- * @property {User[]} rows User list from findAll.
+/**
+ * @typedef UserCount
+ * @property {import('../types.js').User[]} rows User list from findAll.
  * @property {number} count Number of entries found.
  */
