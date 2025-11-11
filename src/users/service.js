@@ -9,7 +9,6 @@ export const userService = {
    * - Executes business rules.
    * - Validates and transforms data.
    * - Calls the repository to access data.
-   *
    * @param {import('../types.js').CreateUserDto} user data from request.
    * @returns {Promise<void>} Returns a promise.
    */
@@ -27,7 +26,6 @@ export const userService = {
    * - Executes business rules.
    * - Validates and transforms data.
    * - Calls the repository to access data.
-   *
    * @param {string} id UUID coming from the request path.
    * @param {import('../types.js').UpdateUserDto} user Data from request body.
    * @returns {Promise<void>} Returns a promise.
@@ -45,7 +43,6 @@ export const userService = {
    * - Executes business rules.
    * - Validates and transforms data.
    * - Calls the repository to access data.
-   *
    * @param {string} id UUID coming from the request path.
    * @returns {Promise<import('../types.js').User>} UserModel wrapped in a promise.
    */
@@ -62,7 +59,6 @@ export const userService = {
    * - Executes business rules.
    * - Validates and transforms data.
    * - Calls the repository to access data.
-   *
    * @param {number} [page] Number of the page to retrieve (optional).
    * @param {number} [size] Number entries to retrieve in each page (optional).
    * @param {string} [filter] String to filter database entries (optional).
@@ -86,7 +82,6 @@ export const userService = {
    * - Executes business rules.
    * - Validates and transforms data.
    * - Calls the repository to access data.
-   *
    * @param {string} id UUID coming from the request path.
    * @returns {Promise<void>} promise
    */
