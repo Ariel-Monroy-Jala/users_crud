@@ -2,7 +2,7 @@ import { ErrorMessages } from '../exceptions/error-messages.js';
 import { ValidationException } from '../exceptions/exceptions.js';
 import { bullService } from '../infrastructure/queue/queue-service.js';
 import { userService } from './service.js';
-import { idSchema, queryParamsSchema, userArraySchema, userSchema } from './schemas.js';
+import { idSchema, queryParamsSchema, userArraySchema, userSchema } from '../schemas.js';
 export const userController = {
 
   /**
@@ -71,7 +71,6 @@ export const userController = {
    */
   getUsers: async (ctx) => {
     const { error, value: query } = queryParamsSchema.validate(ctx.query, { convert: true });
-    console.log(`[User Controller]: ${JSON.stringify(ctx.query)}`);
     if (error) {
       console.log(error);
       throw new ValidationException(ErrorMessages.INVALID_VALUE);
