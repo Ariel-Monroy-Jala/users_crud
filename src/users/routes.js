@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import { userController } from './controller.js';
-import { cleanResponse } from '../../middlewares/clean-response.js';
+import { cleanResponse } from '../middlewares/clean-response.js';
 
 export const router = new Router();
 
