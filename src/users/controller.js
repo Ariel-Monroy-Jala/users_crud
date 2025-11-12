@@ -1,5 +1,8 @@
-import { bullService } from '../infrastructure/queue/bull.service.js';
+import { ErrorMessages } from '../exceptions/error-messages.js';
+import { ValidationException } from '../exceptions/exceptions.js';
+import { bullService } from '../infrastructure/queue/queue-service.js';
 import { userService } from './service.js';
+import { idSchema, queryParamsSchema, userArraySchema, userSchema } from './schemas.js';
 export const userController = {
 
   /**
@@ -11,7 +14,10 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
    */
   crateUser: async (ctx) => {
-    const user = ctx.request.body;
+    const { error, value: user } = userSchema.validate(ctx.request.body);
+    if (error) {
+      throw new ValidationException(ErrorMessages.REQUIRED_FIELD);
+    }
     await userService.createUser(user);
     ctx.body = { message: 'User Created', success: true };
     ctx.status = 201;
@@ -26,8 +32,12 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
    */
   updateUser: async (ctx) => {
+    const { error, value: id } = idSchema.validate(ctx.params.id);
+    if (error) {
+      throw new ValidationException(ErrorMessages.INVALID_ID);
+    }
+
     const user = ctx.request.body;
-    const id = ctx.params.id;
     await userService.updateUser(id, user);
     ctx.body = { message: 'User Updated', success: true };
     ctx.status = 200;
@@ -42,7 +52,10 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
    */
   getUser: async (ctx) => {
-    const id = ctx.params.id;
+    const { error, value: id } = idSchema.validate(ctx.params.id);
+    if (error) {
+      throw new ValidationException(ErrorMessages.INVALID_ID);
+    }
     const user = await userService.getUser(id);
     ctx.body = { message: 'User retrieved', success: true, data: user };
     ctx.status = 200;
@@ -57,8 +70,13 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
    */
   getUsers: async (ctx) => {
-    const { page, size, filter } = ctx.query;
-    const users = await userService.getUsers(page, size, filter);
+    const { error, value: query } = queryParamsSchema.validate(ctx.query, { convert: true });
+    console.log(`[User Controller]: ${JSON.stringify(ctx.query)}`);
+    if (error) {
+      console.log(error);
+      throw new ValidationException(ErrorMessages.INVALID_VALUE);
+    }
+    const users = await userService.getUsers(query ?? {});
     ctx.body = { message: 'Users retrieved', success: true, data: users };
     ctx.status = 200;
   },
@@ -72,7 +90,10 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
    */
   deleteUser: async (ctx) => {
-    const id = ctx.params.id;
+    const { error, value: id } = idSchema.validate(ctx.params.id);
+    if (error) {
+      throw new ValidationException(ErrorMessages.INVALID_ID);
+    }
     await userService.deleteUser(id);
     ctx.status = 204;
   },
@@ -86,8 +107,12 @@ export const userController = {
    * @param {import('koa').Context} ctx The Koa context containing request and response.
    */
   queueCreate: async (ctx) => {
-    const users = ctx.request.body.users;
+    const { error, value: users } = userArraySchema.validate(ctx.request.body.users);
+    if (error) {
+      throw new ValidationException(ErrorMessages.REQUIRED_FIELD);
+    }
     console.log('[User Controller]: Creating bulk users');
+
     bullService.createJob({ data: users, action: 'create', type: 'user' });
     ctx.body = { message: 'User creation queued', success: true };
     ctx.status = 200;
