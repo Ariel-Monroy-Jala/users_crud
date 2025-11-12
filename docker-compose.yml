@@ -11,5 +11,10 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+  users-redis:
+    container_name: user_redis
+    image: redis:8.2.3
+    ports:
+      - 6379:6379
 volumes:
   mysql_data:
