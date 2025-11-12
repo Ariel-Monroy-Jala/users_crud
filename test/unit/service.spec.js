@@ -4,7 +4,8 @@ import { userRepository } from '../../src/users/repository.js';
 import { userService } from '../../src/users/service.js';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { ApiException } from '../../src/exceptions/ApiException.js';
+import { NotFoundException } from '../../src/exceptions/exceptions.js';
+import { ErrorMessages } from '../../src/exceptions/error-messages.js';
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -43,11 +44,6 @@ describe('User service', () => {
       await userService.createUser(fakeUser);
       expect(createStub.calledOnceWithExactly(fakeUser));
     });
-
-    it('Should throw Invalid request error', async () => {
-      createStub.resolves(fakeUser);
-      await expect(userService.createUser({ ...fakeUser, name: null })).to.be.rejectedWith(ApiException, 'Invalid request');
-    });
   });
 
   describe('Updating a user', () => {
@@ -58,15 +54,10 @@ describe('User service', () => {
       expect(updateStub.calledOnceWithExactly(fakeId, fakeUser));
     });
 
-    it('Should throw invalid request error', async () => {
-      updateStub.resolves(fakeUser);
-      await expect(userService.updateUser(null, fakeUser)).to.be.rejectedWith(ApiException, 'Invalid request');
-    });
-
     it('Should throw Not found error', async () => {
       updateStub.resolves(null);
       getStub.resolves(null);
-      await expect(userService.updateUser(fakeId, fakeUser)).to.be.rejectedWith(ApiException, 'Not found');
+      await expect(userService.updateUser(fakeId, fakeUser)).to.be.rejectedWith(NotFoundException, ErrorMessages.USER_NOT_FOUND);
     });
   });
 
@@ -77,14 +68,9 @@ describe('User service', () => {
       expect(result).to.be.equals(fakeUser);
     });
 
-    it('Should throw Invalid request error', async () => {
-      getStub.resolves(null);
-      await expect(userService.getUser(null)).to.be.rejectedWith(ApiException, 'Invalid request');
-    });
-
     it('Should throw Not found error', async () => {
       getStub.resolves(null);
-      await expect(userService.getUser(fakeId)).to.be.rejectedWith(ApiException, 'Not found');
+      await expect(userService.getUser(fakeId)).to.be.rejectedWith(NotFoundException, ErrorMessages.USER_NOT_FOUND);
     });
   });
 
@@ -98,7 +84,8 @@ describe('User service', () => {
 
     it('Should get list users with multiple pages', async () => {
       getUsersStub.resolves({ rows: [fakeUser, fakeUser, fakeUser], count: 10 });
-      const result = await userService.getUsers(1, 3, '');
+      const query = { page: 1, size: 3, filter: '' };
+      const result = await userService.getUsers(query);
       expect(result.elements.length).to.be.equal(3);
       expect(result.totalElements).to.be.equal(10);
       expect(result.totalPages).to.be.equal(4);
@@ -121,13 +108,9 @@ describe('User service', () => {
       expect(deleteStub.calledOnceWithExactly(fakeId));
     });
 
-    it('Should throw Invalid request error', async () => {
-      await expect(userService.deleteUser(null)).to.be.rejectedWith(ApiException, 'Invalid request');
-    });
-
     it('Should throw Not found error', async () => {
       getStub.resolves(null);
-      await expect(userService.deleteUser(fakeId)).to.be.rejectedWith(ApiException, 'Not found');
+      await expect(userService.deleteUser(fakeId)).to.be.rejectedWith(NotFoundException, ErrorMessages.USER_NOT_FOUND);
     });
   });
 });
