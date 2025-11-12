@@ -1,4 +1,3 @@
-import { bullService } from '../infrastructure/queue/bull.service.js';
 import { userService } from './service.js';
 export const userController = {
 
@@ -8,8 +7,9 @@ export const userController = {
    * - Validate and extract parameters from the request.
    * - Calling the corresponding service.
    * - Returning the appropriate response to the client.
+   *
    * @param {import('koa').Context} ctx The Koa context containing request and response.
-   */
+  */
   crateUser: async (ctx) => {
     const user = ctx.request.body;
     await userService.createUser(user);
@@ -23,8 +23,9 @@ export const userController = {
    * - Validate and extract parameters from the request.
    * - Calling the corresponding service.
    * - Returning the appropriate response to the client.
+   *
    * @param {import('koa').Context} ctx The Koa context containing request and response.
-   */
+  */
   updateUser: async (ctx) => {
     const user = ctx.request.body;
     const id = ctx.params.id;
@@ -39,8 +40,9 @@ export const userController = {
    * - Validate and extract parameters from the request.
    * - Calling the corresponding service.
    * - Returning the appropriate response to the client.
+   *
    * @param {import('koa').Context} ctx The Koa context containing request and response.
-   */
+  */
   getUser: async (ctx) => {
     const id = ctx.params.id;
     const user = await userService.getUser(id);
@@ -54,8 +56,9 @@ export const userController = {
    * - Validate and extract parameters from the request.
    * - Calling the corresponding service.
    * - Returning the appropriate response to the client.
+   *
    * @param {import('koa').Context} ctx The Koa context containing request and response.
-   */
+  */
   getUsers: async (ctx) => {
     const { page, size, filter } = ctx.query;
     const users = await userService.getUsers(page, size, filter);
@@ -69,27 +72,12 @@ export const userController = {
    * - Validate and extract parameters from the request.
    * - Calling the corresponding service.
    * - Returning the appropriate response to the client.
+   *
    * @param {import('koa').Context} ctx The Koa context containing request and response.
-   */
+  */
   deleteUser: async (ctx) => {
     const id = ctx.params.id;
     await userService.deleteUser(id);
     ctx.status = 204;
-  },
-
-  /**
-   * Controller that handles HTTP requests and responses for deleting a user.
-   * This function:
-   * - Validate and extract parameters from the request.
-   * - Calling the corresponding service.
-   * - Returning the appropriate response to the client.
-   * @param {import('koa').Context} ctx The Koa context containing request and response.
-   */
-  queueCreate: async (ctx) => {
-    const users = ctx.request.body.users;
-    console.log('[User Controller]: Creating bulk users');
-    bullService.createJob({ data: users, action: 'create', type: 'user' });
-    ctx.body = { message: 'User creation queued', success: true };
-    ctx.status = 200;
   }
 };
