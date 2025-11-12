@@ -11,6 +11,7 @@ usersQueue.process(2, async (job) => {
   await sleep(2000);
   const actionFunc = actions[`${action}:${type}`];
   await actionFunc(data);
+  return { count: data.length, success: true };
 });
 
 usersQueue.on('completed', (job, result) => {
