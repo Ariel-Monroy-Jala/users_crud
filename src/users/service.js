@@ -90,22 +90,5 @@ export const userService = {
     const dbUser = await userRepository.getUser(id);
     if (!dbUser) throw new ApiException(404, 'Not found');
     await userRepository.deleteUser(id);
-  },
-
-  /**
-   *    Service for creating a list of useres, it  contains business logic.
-   * This function:
-   * - Executes business rules.
-   * - Validates and transforms data.
-   * - Calls the repository to access data.
-   * @param {import('../types.js').CreateUserDto} users List of CreateUserdtos
-   */
-
-  bulkCreate: async (users) => {
-    if (!users || !users.lenght === 0) {
-      throw new ApiException(400, 'Invalid request');
-    }
-    await userRepository.bulkCreate(users);
   }
-
 };
