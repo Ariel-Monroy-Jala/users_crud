@@ -4,7 +4,6 @@ import request from 'supertest';
 import { expect } from 'chai';
 import { sequelize } from '../../src/infrastructure/db/sequelize.js';
 import Sinon from 'sinon';
-import { usersQueue } from '../../src/infrastructure/queue/bull.js';
 
 const userBodyRequest = {
   name: 'Jhon Doe',
