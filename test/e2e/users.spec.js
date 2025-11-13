@@ -21,13 +21,13 @@ describe(('E2E: User API'), () => {
   before(() => {
     server = request(app.callback());
     Sinon.stub(console, 'error');
+    Sinon.stub(console, 'log');
+    sequelize.authenticate();
   });
 
   after(async () => {
-    await sequelize.close();
+    // await sequelize.close();
     console.log('[DB] Connection Close');
-    await usersQueue.close();
-    console.log('[Bull queue] Connection Close');
   });
 
   describe('POST /users', () => {
@@ -138,6 +138,20 @@ describe(('E2E: User API'), () => {
     it('Should throw 404 error', async () => {
       const response = await server.delete(`/users/${fakeId}`);
       expect(response.status).to.be.equal(404);
+      expect(response.body.success).to.be.equal(false);
+    });
+  });
+
+  describe('POST /usres/bulk', () => {
+    it('Should enqueue request', async () => {
+      const response = await server.post('/users/bulk').send({ users: [userBodyRequest] });
+      expect(response.status).to.be.equal(200);
+      expect(response.body.success).to.be.equal(true);
+    });
+
+    it('Should throw 400', async () => {
+      const response = await server.post('/users/bulk').send({ users: [{ ...userBodyRequest, name: null }] });
+      expect(response.status).to.be.equal(400);
       expect(response.body.success).to.be.equal(false);
     });
   });
