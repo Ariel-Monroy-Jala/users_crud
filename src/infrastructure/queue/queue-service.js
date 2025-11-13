@@ -1,6 +1,6 @@
 import { usersQueue } from './bull.js';
 
-export const bullService = {
+export const queueService = {
   /**
    * Create a new job in usersQueue
    * @param {job} job Job data

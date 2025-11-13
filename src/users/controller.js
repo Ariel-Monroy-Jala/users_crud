@@ -1,6 +1,6 @@
 import { ErrorMessages } from '../exceptions/error-messages.js';
 import { ValidationException } from '../exceptions/exceptions.js';
-import { bullService } from '../infrastructure/queue/queue-service.js';
+import { queueService } from '../infrastructure/queue/queue-service.js';
 import { userService } from './service.js';
 import { idSchema, queryParamsSchema, userArraySchema, userSchema } from '../schemas.js';
 export const userController = {
@@ -105,14 +105,14 @@ export const userController = {
    * - Returning the appropriate response to the client.
    * @param {import('koa').Context} ctx The Koa context containing request and response.
    */
-  queueCreate: async (ctx) => {
+  bulkCreate: async (ctx) => {
     const { error, value: users } = userArraySchema.validate(ctx.request.body.users);
     if (error) {
       throw new ValidationException(ErrorMessages.REQUIRED_FIELD);
     }
     console.log('[User Controller]: Creating bulk users');
 
-    bullService.createJob({ data: users, action: 'create', type: 'user' });
+    queueService.createJob({ data: users, action: 'create', type: 'user' });
     ctx.body = { message: 'User creation queued', success: true };
     ctx.status = 200;
   }
