@@ -1,4 +1,4 @@
-import { usersQueue } from './bull.js';
+import { createBulkUsersQueue } from './bull.js';
 
 export const queueService = {
   /**
@@ -7,7 +7,7 @@ export const queueService = {
    */
   createJob: async (job) => {
     console.log(`[Bull service]: creating job ${job.action} in ${job.type}`);
-    usersQueue.add(job);
+    createBulkUsersQueue.add(job);
     console.log('[Bull service]: job created');
   }
 };
