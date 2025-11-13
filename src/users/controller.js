@@ -1,6 +1,5 @@
 import { ErrorMessages } from '../exceptions/error-messages.js';
 import { ValidationException } from '../exceptions/exceptions.js';
-import { queueService } from '../infrastructure/queue/queue-service.js';
 import { userService } from './service.js';
 import { idSchema, queryParamsSchema, userArraySchema, userSchema } from '../schemas.js';
 export const userController = {
@@ -111,8 +110,7 @@ export const userController = {
       throw new ValidationException(ErrorMessages.REQUIRED_FIELD);
     }
     console.log('[User Controller]: Creating bulk users');
-
-    queueService.createJob({ data: users, action: 'create', type: 'user' });
+    userService.bulkCreate(users);
     ctx.body = { message: 'User creation queued', success: true };
     ctx.status = 200;
   }

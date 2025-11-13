@@ -1,6 +1,7 @@
 import { ErrorMessages } from '../exceptions/error-messages.js';
 import { NotFoundException, ValidationException } from '../exceptions/exceptions.js';
 import { userRepository } from './repository.js';
+import { queueService } from '../infrastructure/queue/queue-service.js';
 
 export const userService = {
 
@@ -97,7 +98,9 @@ export const userService = {
    */
 
   bulkCreate: async (users) => {
-    await userRepository.bulkCreate(users);
+    console.log('[User Service] Creating bulk users');
+    queueService.createJob({ users });
+    console.log('[User Service] Bulk user creation queued');
   }
 
 };
