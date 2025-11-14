@@ -9,3 +9,4 @@ router.get('/users', cleanResponse, userController.getUsers);
 router.post('/users', userController.crateUser);
 router.put('/users/:id', userController.updateUser);
 router.delete('/users/:id', userController.deleteUser);
+router.post('/users/bulk', userController.bulkCreate);

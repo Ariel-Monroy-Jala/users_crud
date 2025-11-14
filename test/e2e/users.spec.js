@@ -2,7 +2,7 @@ import { describe, it, after, before } from 'mocha';
 import app from '../../src/app.js';
 import request from 'supertest';
 import { expect } from 'chai';
-import { sequelize } from '../../src/db/sequelize.js';
+import { sequelize } from '../../src/infrastructure/db/sequelize.js';
 import Sinon from 'sinon';
 
 const userBodyRequest = {
@@ -11,6 +11,8 @@ const userBodyRequest = {
   password: 'password'
 };
 
+const fakeId = '97eefd0a-e1d5-49e0-993d-03676f2910f4';
+
 describe(('E2E: User API'), () => {
   let server;
   let userId;
@@ -18,10 +20,13 @@ describe(('E2E: User API'), () => {
   before(() => {
     server = request(app.callback());
     Sinon.stub(console, 'error');
+    Sinon.stub(console, 'log');
+    sequelize.authenticate();
   });
 
   after(async () => {
-    await sequelize.close();
+    // await sequelize.close();
+    console.log('[DB] Connection Close');
   });
 
   describe('POST /users', () => {
@@ -69,8 +74,14 @@ describe(('E2E: User API'), () => {
       expect(response.body.data.username).to.be.equal(userBodyRequest.username);
     });
 
-    it('Should throw 404 error', async () => {
+    it('Should throw 400 error', async () => {
       const response = await server.get('/users/someFakeId');
+      expect(response.status).to.be.equal(400);
+      expect(response.body.success).to.be.equal(false);
+    });
+
+    it('Should throw 404 error', async () => {
+      const response = await server.get(`/users/${fakeId}`);
       expect(response.status).to.be.equal(404);
       expect(response.body.success).to.be.equal(false);
     });
@@ -90,8 +101,14 @@ describe(('E2E: User API'), () => {
       expect(putResponse.status).to.be.equal(405);
     });
 
-    it('Should throw 404 error', async () => {
+    it('Should throw 400 error', async () => {
       const putResponse = await server.put('/users/someFakeId').send({ ...userBodyRequest, username: 'doej' });
+      expect(putResponse.status).to.be.equal(400);
+      expect(putResponse.body.success).to.be.equal(false);
+    });
+
+    it('Should throw 404 error', async () => {
+      const putResponse = await server.put(`/users/${fakeId}`).send({ ...userBodyRequest, username: 'doej' });
       expect(putResponse.status).to.be.equal(404);
       expect(putResponse.body.success).to.be.equal(false);
     });
@@ -111,9 +128,29 @@ describe(('E2E: User API'), () => {
       expect(response.status).to.be.equal(405);
     });
 
-    it('Should throw 404 error', async () => {
+    it('Should throw 400 error', async () => {
       const response = await server.delete('/users/someFakeId');
+      expect(response.status).to.be.equal(400);
+      expect(response.body.success).to.be.equal(false);
+    });
+
+    it('Should throw 404 error', async () => {
+      const response = await server.delete(`/users/${fakeId}`);
       expect(response.status).to.be.equal(404);
+      expect(response.body.success).to.be.equal(false);
+    });
+  });
+
+  describe('POST /usres/bulk', () => {
+    it('Should enqueue request', async () => {
+      const response = await server.post('/users/bulk').send({ users: [userBodyRequest] });
+      expect(response.status).to.be.equal(200);
+      expect(response.body.success).to.be.equal(true);
+    });
+
+    it('Should throw 400', async () => {
+      const response = await server.post('/users/bulk').send({ users: [{ ...userBodyRequest, name: null }] });
+      expect(response.status).to.be.equal(400);
       expect(response.body.success).to.be.equal(false);
     });
   });
