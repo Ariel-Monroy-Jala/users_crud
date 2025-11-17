@@ -6,7 +6,7 @@ const userRepository = container.resolve('userRepository');
 createBulkUsersQueue.process(2, async (job) => {
   const { users } = job.data;
   console.log(`[Bull worker]: Starting process job ${job.id} to creating users`);
-  await sleep(10000);
+  await sleep(5000);
   await userRepository.bulkCreate(users);
   return { success: true };
 });
