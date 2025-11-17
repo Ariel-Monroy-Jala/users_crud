@@ -1,8 +1,10 @@
 import Router from '@koa/router';
-import { userController } from './controller.js';
 import { cleanResponse } from '../middlewares/clean-response.js';
+import { container } from '../container.js';
 
 export const router = new Router();
+
+const userController = container.resolve('userController');
 
 router.get('/users/:id', cleanResponse, userController.getUser);
 router.get('/users', cleanResponse, userController.getUsers);

@@ -1,5 +1,7 @@
+import { container } from '../../container.js';
 import { createBulkUsersQueue } from '../queue/bull.js';
-import { userRepository } from '../../users/repository.js';
+
+const userRepository = container.resolve('userRepository');
 
 createBulkUsersQueue.process(2, async (job) => {
   const { users } = job.data;
