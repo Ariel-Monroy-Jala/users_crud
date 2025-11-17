@@ -73,7 +73,7 @@ export class UserRepository {
    * @param {string} id UUID of the user to delete.
    * @returns {Promise<void>} Promise.
    */
-  async deleteUse (id) {
+  async deleteUser (id) {
     await this.userModel.destroy({ where: { id } });
   }
 
