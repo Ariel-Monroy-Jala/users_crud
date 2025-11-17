@@ -2,8 +2,19 @@ import { ErrorMessages } from '../exceptions/error-messages.js';
 import { ValidationException } from '../exceptions/exceptions.js';
 import { idSchema, queryParamsSchema, userArraySchema, userSchema } from '../schemas.js';
 
+/**
+ * Class for handling HTTP Requests and Responses for managing users
+ * @class
+ */
 export class UserController {
+  /**
+   *
+   * @param {import('./service.js').UserService} userService  Service that encapsulates the business logic for user operations.
+   */
   constructor (userService) {
+    /**
+     * @type {import('./service.js').UserService}
+     */
     this.userService = userService;
   }
 

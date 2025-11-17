@@ -1,3 +1,7 @@
+/**
+ * Class for managing queue.
+ * @class
+ */
 export class QueueService {
   constructor (queue) {
     this.queue = queue;

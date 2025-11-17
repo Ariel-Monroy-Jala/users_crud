@@ -14,7 +14,7 @@ export class ApiException extends Error {
 export class NotFoundException extends ApiException {
   /**
    *  Creates a Not Found Exception
-   * @param {string} message Message for NotFoundExeption
+   * @param {string} message Description message.
    */
   constructor (message) {
     super(404, message);
@@ -24,7 +24,7 @@ export class NotFoundException extends ApiException {
 export class ValidationException extends ApiException {
   /**
    *  Creates a new Validation
-   * @param {string} message message Message for NotFoundExeption
+   * @param {string} message Description message.
    */
   constructor (message) {
     super(400, message);

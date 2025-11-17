@@ -4,6 +4,9 @@ import { container } from '../container.js';
 
 export const router = new Router();
 
+/**
+ * @type {import('./controller.js').UserController}
+ */
 const userController = container.resolve('userController');
 
 router.get('/users/:id', cleanResponse, userController.getUser);

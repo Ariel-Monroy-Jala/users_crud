@@ -1,3 +1,8 @@
+/**
+ *
+ * @param {import('koa').Context} ctx The Koa context containing request and response.
+ * @param {import('koa').Next} next The Koa next function.
+ */
 export const errorHandler = async (ctx, next) => {
   try {
     await next();

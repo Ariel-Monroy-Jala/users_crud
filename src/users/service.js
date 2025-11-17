@@ -1,8 +1,24 @@
 import { ErrorMessages } from '../exceptions/error-messages.js';
 import { NotFoundException, ValidationException } from '../exceptions/exceptions.js';
+
+/**
+ * Class for enforcing business logic to manage users.
+ * @class
+ */
 export class UserService {
+  /**
+   *
+   * @param {import('./repository.js').UserRepository} userRepository Repository responsible for accessing and persisting user data.
+   * @param {import('../infrastructure/queue/queue-service.js').QueueService} queueService Service used to publish and process asynchronous user-related events.
+   */
   constructor (userRepository, queueService) {
+    /**
+     * @type {import('./repository.js').UserRepository}
+     */
     this.userRepository = userRepository;
+    /**
+     * @type {import('../infrastructure/queue/queue-service.js').QueueService}
+     */
     this.queueService = queueService;
   }
 

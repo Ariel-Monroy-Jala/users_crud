@@ -1,7 +1,18 @@
 import { Op } from 'sequelize';
 
+/**
+ * Class for managing comunication with the database.
+ * @class
+ */
 export class UserRepository {
+  /**
+   *
+   * @param {import('sequelize').ModelStatic<import('../types.js').User>} userModel Sequelize model representing the User entity.
+   */
   constructor (userModel) {
+    /**
+     * @type {import('sequelize').ModelStatic<import('../types.js').User>}
+     */
     this.userModel = userModel;
   }
 
@@ -11,7 +22,7 @@ export class UserRepository {
    * This function:
    * - Performs create operation in the database.
    * @param {import('../types.js').CreateUserDto} user User data for database storage.
-   * @returns {Promise<void>} Promise.
+   * @returns {Promise<void>} nothing.
    */
   async createUser (user) {
     await this.userModel.create(user);
