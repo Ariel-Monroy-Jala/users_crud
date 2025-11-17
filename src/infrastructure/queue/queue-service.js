@@ -1,16 +1,27 @@
-import { createBulkUsersQueue } from './bull.js';
+export class QueueService {
+  constructor (queue) {
+    this.queue = queue;
+    this.testConnection();
+  }
 
-export const queueService = {
+  testConnection () {
+    this.queue.client.ping().then((res) => {
+      console.log('[Bull queue]: Redis connected', res);
+    }).catch((err) => {
+      console.error('[Bull queue]: Error connecting with Redis', err);
+    });
+  }
+
   /**
    * Create a new job in usersQueue
    * @param {job} job Job data
    */
-  createJob: async (job) => {
-    console.log(`[Bull service]: creating job ${job.action} in ${job.type}`);
-    createBulkUsersQueue.add(job);
+  async createBulkUserCreationJob (job) {
+    console.log('[Bull service]: creating job for bulk user creation');
+    this.queue.add(job);
     console.log('[Bull service]: job created');
   }
-};
+}
 
 /**
  * @typedef job
