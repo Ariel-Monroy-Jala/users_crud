@@ -8,6 +8,8 @@ import { QueueService } from './infrastructure/queue/queue-service.js';
  * Allows registering factories and resolving instances on demand.
  */
 class Container {
+  #instances;
+  #dependencies;
   /**
    * Creates a new container.
    * Initializes internal objects for dependencies and their instances.
@@ -17,14 +19,14 @@ class Container {
      * Created instances of dependencies.
      * @type {{[key:string]: unknown}}
      */
-    this.instances = {};
+    this.#instances = {};
 
     /**
      * Registered factories to create dependencies.
      * Each factory should be a function that receives the container and returns the instance.
      * @type {{[key:string]: (c?: Container) => unknown}}
      */
-    this.dependencies = {};
+    this.#dependencies = {};
   }
 
   /**
@@ -33,7 +35,7 @@ class Container {
    * @param {function(Container?): unknown} factory - Function that returns the instance of the dependency.
    */
   register (name, factory) {
-    this.dependencies[name] = factory;
+    this.#dependencies[name] = factory;
   }
 
   /**
@@ -44,14 +46,14 @@ class Container {
    * @throws {Error} If no factory is registered for the given name.
    */
   resolve (name) {
-    if (!this.instances[name]) {
-      const factory = this.dependencies[name];
+    if (!this.#instances[name]) {
+      const factory = this.#dependencies[name];
       if (!factory) {
         throw new Error(`Dependency ${name} not found`);
       }
-      this.instances[name] = factory(this);
+      this.#instances[name] = factory(this);
     }
-    return this.instances[name];
+    return this.#instances[name];
   }
 }
 
