@@ -3,7 +3,7 @@ import { describe, it, beforeEach, afterEach } from 'mocha';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { UserModel } from '../../src/infrastructure/db/models/user.js';
-import { userRepository } from '../../src/users/repository.js';
+import { UserRepository } from '../../src/users/repository.js';
 
 const fakeUser = {
   id: '1234-5678',
@@ -21,6 +21,7 @@ describe('User repository', () => {
   let findAllStub;
   let destroyStub;
   let createBatchStub;
+  const userRepository = new UserRepository(UserModel);
 
   beforeEach(() => {
     createStub = sinon.stub(UserModel, 'create');

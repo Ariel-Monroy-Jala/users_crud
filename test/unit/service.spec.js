@@ -1,11 +1,12 @@
 import { describe, beforeEach, afterEach, it } from 'mocha';
 import Sinon from 'sinon';
-import { userRepository } from '../../src/users/repository.js';
-import { userService } from '../../src/users/service.js';
+
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { NotFoundException } from '../../src/exceptions/exceptions.js';
 import { ErrorMessages } from '../../src/exceptions/error-messages.js';
+import { UserRepository } from '../../src/users/repository.js';
+import { UserService } from '../../src/users/service.js';
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -25,6 +26,8 @@ describe('User service', () => {
   let getStub;
   let getUsersStub;
   let deleteStub;
+  const userRepository = new UserRepository(null);
+  const userService = new UserService(userRepository);
 
   beforeEach(() => {
     createStub = Sinon.stub(userRepository, 'createUser');

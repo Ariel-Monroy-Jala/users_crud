@@ -1,47 +1,48 @@
 /* eslint-disable no-unused-expressions */
 import { describe, it, before, after } from 'mocha';
-import { usersQueue } from '../../src/infrastructure/queue/bull.js';
+import { createBulkUsersQueue } from '../../src/infrastructure/queue/bull.js';
 import '../../src/infrastructure/worker/worker.js';
 import { expect } from 'chai';
 
 import Sinon from 'sinon';
-import { userService } from '../../src/users/service.js';
+import { UserService } from '../../src/users/service.js';
 import { sequelize } from '../../src/infrastructure/db/sequelize.js';
+import { UserModel } from '../../src/infrastructure/db/models/user.js';
 
 describe('E2E Bull worker', function () {
   this.timeout(10000);
-
+  const userService = new UserService(null);
   before(async () => {
     await sequelize.authenticate();
     Sinon.stub(userService, 'bulkCreate').resolves(true);
   });
 
-  after(() => {
+  after(async () => {
     userService.bulkCreate.restore();
-    usersQueue.close();
+    await UserModel.destroy({ where: { name: 'Jhon Doe' } });
+    createBulkUsersQueue.close();
     sequelize.close();
   });
 
   it('Should process a job', function (done) {
     const jobData = {
-      action: 'create',
-      type: 'user',
-      data:
-        {
-          name: 'Jhon Doe',
-          username: 'jdoe',
-          password: 'superPassword'
-        }
+
+      users: [{
+        name: 'Jhon Doe',
+        username: 'jdoe',
+        password: 'superPassword'
+      }]
+
     };
-    usersQueue.once('completed', (job, result) => {
+    createBulkUsersQueue.once('completed', (job, result) => {
       expect(result.success).to.be.true;
       done();
     });
 
-    usersQueue.once('failed', (job, err) => {
+    createBulkUsersQueue.once('failed', (job, err) => {
       done(err);
     });
 
-    usersQueue.add(jobData);
+    createBulkUsersQueue.add(jobData);
   });
 });
