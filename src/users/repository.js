@@ -1,7 +1,9 @@
-import { UserModel } from '../infrastructure/db/models/user.js';
 import { Op } from 'sequelize';
 
-export const userRepository = {
+export class UserRepository {
+  constructor (userModel) {
+    this.userModel = userModel;
+  }
 
   /**
    * Repository that manages creation of a user.
@@ -11,22 +13,21 @@ export const userRepository = {
    * @param {import('../types.js').CreateUserDto} user User data for database storage.
    * @returns {Promise<void>} Promise.
    */
-  createUser: async (user) => {
-    await UserModel.create(user);
-  },
+  async createUser (user) {
+    await this.userModel.create(user);
+  }
 
   /**
    * Repository that manages updating a user.
-   *
    * This function:
    * - Performs update operation in the database.
    * @param {string} id UUID of the user to update.
    * @param {import('../types.js').UpdateUserDto} user New user data for database storage.
    * @returns {Promise<void>} Promise.
    */
-  updateUser: async (id, user) => {
-    await UserModel.update(user, { where: { id } });
-  },
+  async updateUser (id, user) {
+    await this.userModel.update(user, { where: { id } });
+  }
 
   /**
    * Repository that manages retrieving a user by its id.
@@ -36,10 +37,10 @@ export const userRepository = {
    * @param {string} id UUID of the user to update.
    * @returns {Promise<import('../types.js').User>} User data wrapped in a promise.
    */
-  getUser: async (id) => {
-    const user = await UserModel.findOne({ where: { id } });
+  async getUser (id) {
+    const user = await this.userModel.findOne({ where: { id } });
     return user;
-  },
+  }
 
   /**
    * Repository that manages getting a list of users and count.
@@ -51,8 +52,8 @@ export const userRepository = {
    * @param {string} filter String to filter database entries.
    * @returns {Promise<UserCount>} User data wrapped in a promise.
    */
-  getUsers: async (page, size, filter) => {
-    return await UserModel.findAndCountAll({
+  async getUsers (page, size, filter) {
+    return await this.userModel.findAndCountAll({
       where: {
         [Op.or]: [
           { name: { [Op.like]: filter } },
@@ -62,7 +63,7 @@ export const userRepository = {
       limit: size,
       offset: (page - 1) * size
     });
-  },
+  }
 
   /**
    * Repository that manages deleting a user.
@@ -72,9 +73,9 @@ export const userRepository = {
    * @param {string} id UUID of the user to delete.
    * @returns {Promise<void>} Promise.
    */
-  deleteUser: async (id) => {
-    await UserModel.destroy({ where: { id } });
-  },
+  async deleteUse (id) {
+    await this.userModel.destroy({ where: { id } });
+  }
 
   /**
    * Repository that manages creating a list of users.
@@ -83,10 +84,10 @@ export const userRepository = {
    * - Performs bulk create operation in the database.
    * @param {import('../types.js').User} users List of users to be created
    */
-  bulkCreate: async (users) => {
-    await UserModel.bulkCreate(users);
+  async bulkCreate (users) {
+    await this.userModel.bulkCreate(users);
   }
-};
+}
 
 /**
  * @typedef UserCount
