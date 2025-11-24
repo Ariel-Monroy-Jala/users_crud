@@ -1,7 +1,26 @@
-import { ApiException } from '../exceptions/ApiException.js';
-import { userRepository } from './repository.js';
+import { ErrorMessages } from '../exceptions/error-messages.js';
+import { NotFoundException, ValidationException } from '../exceptions/exceptions.js';
 
-export const userService = {
+/**
+ * Class for enforcing business logic to manage users.
+ * @class
+ */
+export class UserService {
+  /**
+   *
+   * @param {import('./repository.js').UserRepository} userRepository Repository responsible for accessing and persisting user data.
+   * @param {import('../infrastructure/queue/queue-service.js').QueueService} queueService Service used to publish and process asynchronous user-related events.
+   */
+  constructor (userRepository, queueService) {
+    /**
+     * @type {import('./repository.js').UserRepository}
+     */
+    this.userRepository = userRepository;
+    /**
+     * @type {import('../infrastructure/queue/queue-service.js').QueueService}
+     */
+    this.queueService = queueService;
+  }
 
   /**
    * Service for creating a user it  contains business logic.
@@ -12,13 +31,12 @@ export const userService = {
    * @param {import('../types.js').CreateUserDto} user data from request.
    * @returns {Promise<void>} Returns a promise.
    */
-  createUser: async (user) => {
+  async createUser (user) {
     if (!user.name || !user.username || !user.password) {
-      throw new ApiException(400, 'Invalid request');
+      throw new ValidationException(ErrorMessages.USER_NOT_FOUND);
     }
-
-    await userRepository.createUser(user);
-  },
+    await this.userRepository.createUser(user);
+  }
 
   /**
    * Service for updating a user it  contains business logic.
@@ -30,12 +48,11 @@ export const userService = {
    * @param {import('../types.js').UpdateUserDto} user Data from request body.
    * @returns {Promise<void>} Returns a promise.
    */
-  updateUser: async (id, user) => {
-    if (!id) throw new ApiException(400, 'Invalid request');
-    const dbUser = await userRepository.getUser(id);
-    if (!dbUser) throw new ApiException(404, 'Not found');
-    await userRepository.updateUser(id, user);
-  },
+  async updateUser (id, user) {
+    const dbUser = await this.userRepository.getUser(id);
+    if (!dbUser) throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+    await this.userRepository.updateUser(id, user);
+  }
 
   /**
    * Service for getting a user by its id, it  contains business logic.
@@ -46,12 +63,11 @@ export const userService = {
    * @param {string} id UUID coming from the request path.
    * @returns {Promise<import('../types.js').User>} UserModel wrapped in a promise.
    */
-  getUser: async (id) => {
-    if (!id) throw new ApiException(400, 'Invalid request');
-    const user = await userRepository.getUser(id);
-    if (!user) throw new ApiException(404, 'Not found');
+  async getUser (id) {
+    const user = await this.userRepository.getUser(id);
+    if (!user) throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
     return user;
-  },
+  }
 
   /**
    * Service for getting a user by its id, it  contains business logic.
@@ -59,12 +75,10 @@ export const userService = {
    * - Executes business rules.
    * - Validates and transforms data.
    * - Calls the repository to access data.
-   * @param {number} [page] Number of the page to retrieve (optional).
-   * @param {number} [size] Number entries to retrieve in each page (optional).
-   * @param {string} [filter] String to filter database entries (optional).
+   * @param {QueryParams} [query] Number of the page to retrieve (optional).
    * @returns {Promise<import('../types.js').UserList>} List of users wrapped in a promise.
    */
-  getUsers: async (page, size, filter) => {
+  async getUsers ({ page, size, filter }) {
     if (!page) page = 1;
     if (!size) size = 10;
     if (!filter) {
@@ -72,9 +86,9 @@ export const userService = {
     } else {
       filter = `%${filter}%`;
     }
-    const users = await userRepository.getUsers(parseInt(page), parseInt(size), filter);
+    const users = await this.userRepository.getUsers(parseInt(page), parseInt(size), filter);
     return { elements: users.rows, totalElements: users.count, page, size, totalPages: Math.ceil(users.count / size) };
-  },
+  }
 
   /**
    * Service for deleting a user by its id, it  contains business logic.
@@ -85,10 +99,31 @@ export const userService = {
    * @param {string} id UUID coming from the request path.
    * @returns {Promise<void>} promise
    */
-  deleteUser: async (id) => {
-    if (!id) throw new ApiException(400, 'Invalid request');
-    const dbUser = await userRepository.getUser(id);
-    if (!dbUser) throw new ApiException(404, 'Not found');
-    await userRepository.deleteUser(id);
+  async deleteUser (id) {
+    const dbUser = await this.userRepository.getUser(id);
+    if (!dbUser) throw new NotFoundException(ErrorMessages.USER_NOT_FOUND);
+    await this.userRepository.deleteUser(id);
   }
-};
+
+  /**
+   *    Service for creating a list of useres, it  contains business logic.
+   * This function:
+   * - Executes business rules.
+   * - Validates and transforms data.
+   * - Calls the repository to access data.
+   * @param {import('../types.js').CreateUserDto[]} users List of CreateUserdtos
+   */
+
+  async bulkCreate (users) {
+    console.log('[User Service] Creating bulk users');
+    this.queueService.createBulkUserCreationJob({ users });
+    console.log('[User Service] Bulk user creation queued');
+  }
+}
+
+/**
+ * @typedef QueryParams
+ * @property {number} page Number of page
+ * @property {number} size Number of entries in each page
+ * @property {string} filter String to filter entries against.
+ */

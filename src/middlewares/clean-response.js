@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {import('koa').Context} ctx The Koa context containing request and response.
+ * @param {import('koa').Next} next The Koa next function.
+ * @returns {void}
+ */
 export const cleanResponse = async (ctx, next) => {
   await next();
 

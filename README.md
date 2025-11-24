@@ -7,14 +7,17 @@ To run this project, follow the steps below.
 To start the database and Koa server, some environment variables are required.
 You should add them to a `.env` file in the root of the project.
 
-| Name        | Description                       |
-|-------------|-----------------------------------|
-| PORT        | Port where the server will listen |
-| DB_USERNAME | Username for db connection        |
-| DB_PASSWORD | Password for db connection        |
-| DB_HOST     | Host of db instance               |
-| DB_PORT     | Port of db instance               |
-| DB_NAME     | Name of the database              |
+| Name           | Description                       |
+|----------------|-----------------------------------|
+| PORT           | Port where the server will listen |
+| DB_USERNAME    | Username for db connection        |
+| DB_PASSWORD    | Password for db connection        |
+| DB_HOST        | Host of db instance               |
+| DB_PORT        | Port of db instance               |
+| DB_NAME        | Name of the database              |
+| REDIS_PORT     | Host of redis instance            |
+| REDIS_HOST     | Port of redis instance            |
+| REDIS_PASSWORD | password for redis                |
 
 ## 2. Run docker compose
 

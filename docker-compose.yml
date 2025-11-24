@@ -3,7 +3,7 @@ services:
     container_name: user_db
     image: mysql:8.0
     ports:
-      - 3306:3306
+      - ${DB_PORT}:3306
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${DB_NAME}
@@ -11,5 +11,13 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+  users-redis:
+    container_name: user_redis
+    image: redis:8.2.3
+    ports:
+      - ${REDIS_PORT}:6379
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: [ "redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
 volumes:
   mysql_data:

@@ -2,8 +2,8 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { UserModel } from '../../src/db/models/user.js';
-import { userRepository } from '../../src/users/repository.js';
+import { UserModel } from '../../src/infrastructure/db/models/user.js';
+import { UserRepository } from '../../src/users/repository.js';
 
 const fakeUser = {
   id: '1234-5678',
@@ -20,6 +20,8 @@ describe('User repository', () => {
   let findOneStub;
   let findAllStub;
   let destroyStub;
+  let createBatchStub;
+  const userRepository = new UserRepository(UserModel);
 
   beforeEach(() => {
     createStub = sinon.stub(UserModel, 'create');
@@ -27,6 +29,7 @@ describe('User repository', () => {
     findOneStub = sinon.stub(UserModel, 'findOne');
     findAllStub = sinon.stub(UserModel, 'findAndCountAll');
     destroyStub = sinon.stub(UserModel, 'destroy');
+    createBatchStub = sinon.stub(UserModel, 'bulkCreate');
   });
 
   afterEach(() => {
@@ -62,5 +65,11 @@ describe('User repository', () => {
     destroyStub.resolves(1);
     await userRepository.deleteUser(fakeId);
     expect(destroyStub.calledOnceWithExactly({ where: { id: fakeId } })).to.be.true;
+  });
+
+  it('Should create users in batch', async () => {
+    createBatchStub.resolves([fakeUser]);
+    await userRepository.bulkCreate([fakeUser]);
+    expect(createBatchStub.calledOnceWithExactly([fakeUser])).to.be.true;
   });
 });

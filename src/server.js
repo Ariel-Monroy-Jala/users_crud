@@ -2,4 +2,4 @@ import app from './app.js';
 
 const port = process.env.PORT || 3002;
 
-app.listen(port, () => { console.log(`Listening on port ${port}`); });
+app.listen(port, () => { console.log(`[Server]: Listening on port ${port}`); });

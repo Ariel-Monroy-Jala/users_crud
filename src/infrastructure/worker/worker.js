@@ -1,0 +1,24 @@
+import { container } from '../../container.js';
+import { createBulkUsersQueue } from '../queue/bull.js';
+
+const userRepository = container.resolve('userRepository');
+
+createBulkUsersQueue.process(2, async (job) => {
+  const { users } = job.data;
+  console.log(`[Bull worker]: Starting process job ${job.id} to creating users`);
+  await sleep(5000);
+  await userRepository.bulkCreate(users);
+  return { success: true };
+});
+
+createBulkUsersQueue.on('completed', (job, result) => {
+  console.log(`[Bull worker]: Job ${job.id} completed ${JSON.stringify(result)}`);
+});
+
+createBulkUsersQueue.on('failed', (job, err) => {
+  console.error(`[Bull worker]: Job ${job.id} failed`, err);
+});
+
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
